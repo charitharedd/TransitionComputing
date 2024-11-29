@@ -1,1 +1,45 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    table { border-collapse: collapse; width: 50%; margin: auto; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .passed { color: green; }
+    .failed { color: red; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Checklist Evaluation</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="checklistResults"></tbody>
+  </table>
+  <script>
+    fetch("/api/checklist")
+      .then((response) => response.json())
+      .then((data) => {
+        const tableBody = document.getElementById("checklistResults");
+        data.forEach((item) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${item.description}</td>
+                           <td class="${item.passed ? 'passed' : 'failed'}">
+                             ${item.passed ? "Passed" : "Failed"}
+                           </td>`;
+          tableBody.appendChild(row);
+        });
+      })
+      .catch((err) => console.error("Error loading checklist:", err));
+  </script>
+</body>
+</html>
